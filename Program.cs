@@ -26,12 +26,39 @@ public static class Program
             engine.SetupWorld();
 
             bool quit = false;
+            bool paused = false;
+            bool lastP = false;
+            bool lastF11 = false;
+            
+            gameWindow.SetWindowTitle("The Adventure");
+            
             while (!quit)
             {
                 quit = input.ProcessInput();
                 if (quit) break;
+                
+                // Handle pause and update window title
+                bool thisP = input.IsKeyPPressed();
+                
+                if (thisP && !lastP)
+                {
+                    paused = !paused;
+                    var suffix = paused ? " [PAUSED]" : "";
+                    gameWindow.SetWindowTitle($"The Adventure{suffix}");
+                }
+                lastP = thisP;
+                
+                // handle fullscreen
+                bool thisF11 = input.IsKeyF11Pressed();
+                if (thisF11 && !lastF11)
+                {
+                    gameWindow.ToggleFullscreen();
+                }
+                lastF11 = thisF11;
 
-                engine.ProcessFrame();
+                if (!paused)
+                    engine.ProcessFrame();
+                
                 engine.RenderFrame();
 
                 Thread.Sleep(13);

@@ -18,6 +18,8 @@ public unsafe class GameWindow : IDisposable
 
     private IntPtr _window;
     private readonly Sdl _sdl;
+    
+    private bool _isFullscreen = false;
 
     public GameWindow(Sdl sdl)
     {
@@ -54,6 +56,19 @@ public unsafe class GameWindow : IDisposable
         }
 
         return renderer;
+    }
+
+    public void ToggleFullscreen()
+    {
+        var flag = _isFullscreen ? 0u : (uint)WindowFlags.FullscreenDesktop;
+        
+        _sdl.SetWindowFullscreen((Window*)_window, flag);
+        _isFullscreen = !_isFullscreen;
+    }
+
+    public void SetWindowTitle(string title)
+    {
+        _sdl.SetWindowTitle((Window*)_window, title);
     }
 
     private void ReleaseUnmanagedResources()
