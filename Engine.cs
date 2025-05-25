@@ -22,6 +22,8 @@ public class Engine
 
     private DateTimeOffset _lastUpdate = DateTimeOffset.Now;
 
+    private int _score = 0;
+
     public Engine(GameRenderer renderer, Input input)
     {
         _renderer = renderer;
@@ -103,7 +105,7 @@ public class Engine
         {
             _player.Attack();
         }
-        
+
         _scriptEngine.ExecuteAll(this);
 
         if (addBomb)
@@ -122,8 +124,6 @@ public class Engine
 
         RenderTerrain();
         RenderAllObjects();
-
-        _renderer.PresentFrame();
     }
 
     public void RenderAllObjects()
@@ -153,6 +153,10 @@ public class Engine
             if (deltaX < 32 && deltaY < 32)
             {
                 _player.GameOver();
+            }
+            else if (_player.State.State != PlayerObject.PlayerState.GameOver)
+            {
+                _score++;
             }
         }
 
@@ -218,4 +222,6 @@ public class Engine
         TemporaryGameObject bomb = new(spriteSheet, 2.1, (worldCoords.X, worldCoords.Y));
         _gameObjects.Add(bomb.Id, bomb);
     }
+
+    public int Score => _score;
 }
