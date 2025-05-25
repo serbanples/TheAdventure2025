@@ -29,6 +29,8 @@ public static class Program
             bool paused = false;
             bool lastP = false;
             bool lastF11 = false;
+            bool lastR = false;
+            bool lastEscape = false;
             
             gameWindow.SetWindowTitle("The Adventure");
             
@@ -56,7 +58,29 @@ public static class Program
                 }
                 lastF11 = thisF11;
 
-                if (!paused)
+                if (engine.IsGameOver)
+                {
+                    gameWindow.SetWindowTitle("The Adventure [GAME OVER]");
+                    bool thisR = input.IsKeyRPressed();
+                    if (thisR && !lastR)
+                    {
+                        engine = new Engine(gameRenderer, input);
+                        engine.SetupWorld();
+                        paused = false;
+                        gameWindow.SetWindowTitle("The Adventure");
+                    }
+                    lastR = thisR;
+                    
+                    bool thisEscape = input.IsKeyEscapePressed();
+                    if (thisEscape && !lastEscape)
+                    {
+                        quit = true;
+                        break;
+                    }
+                    lastEscape = thisEscape;
+                }
+
+                if (!paused && !engine.IsGameOver)
                     engine.ProcessFrame();
                 
                 engine.RenderFrame();

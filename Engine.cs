@@ -30,6 +30,9 @@ public class Engine
         _input.OnMouseClick += (_, coords) => AddBomb(coords.x, coords.y);
     }
 
+    // get game state.
+    public bool IsGameOver => _player?.State.State == TheAdventure.Models.PlayerObject.PlayerState.GameOver;
+
     public void SetupWorld()
     {
         _player = new(SpriteSheet.Load(_renderer, "Player.json", "Assets"), 100, 100);
